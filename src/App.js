@@ -1,23 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import './App.css';  // Asegúrate de tener estilos adecuados en App.css
 
 function App() {
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState('');
+
+  const addTask = () => {
+    if (newTask.trim() !== '') {
+      setTasks([...tasks, newTask]);
+      setNewTask('');
+    }
+  };
+
+  const removeTask = (index) => {
+    const newTasks = tasks.filter((task, i) => i !== index);
+    setTasks(newTasks);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Lista de Tareas</h1>
+      
+      <div className="task-input">
+        <input
+          type="text"
+          placeholder="Nueva tarea"
+          value={newTask}
+          onChange={(e) => setNewTask(e.target.value)}
+        />
+        <button onClick={addTask}>Agregar tarea</button>
+      </div>
+
+      <div className="task-list">
+        {tasks.map((task, index) => (
+          <div key={index} className="task-card">
+            <p>{task}</p>
+            <button onClick={() => removeTask(index)} className="remove-btn">Eliminar</button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
