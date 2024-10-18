@@ -8,23 +8,50 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   height: 100vh;
   background-color: #f4f4f4;
 }
 
-/* Título centrado */
+/* Título centrado y fijo */
 .title {
   text-align: center;
   font-size: 36px;
   margin-bottom: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #f4f4f4;
+  z-index: 10;
+  padding: 10px 0;
 }
 
 /* Lista de tareas */
 .task-list {
-  width: 80%;
-  max-width: 800px;
-  margin-top: 20px;
+  width: 80%; /* Ancho completo */
+  margin-top: 80px; /* Espacio para el título */
+  padding: 20px; /* Espacio a los lados*/
+  overflow-y: auto; /* Scroll vertical */
+  max-height: 70vh; /* Altura máxima de la lista */
+}
+
+/* Personalizar la barra de desplazamiento (para WebKit) */
+.task-list::-webkit-scrollbar {
+  width: 8px; /* Ancho de la barra */
+}
+
+.task-list::-webkit-scrollbar-thumb {
+  background-color: #007bff; /* Color del "pulgar" de la barra */
+  border-radius: 10px; /* Bordes redondeados */
+}
+
+.task-list::-webkit-scrollbar-thumb:hover {
+  background-color: #0056b3; /* Color del "pulgar" al pasar el ratón */
+}
+
+.task-list::-webkit-scrollbar-track {
+  background: #f0f0f0; /* Color de la pista de la barra */
 }
 
 .task-card {
