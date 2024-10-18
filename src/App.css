@@ -1,58 +1,156 @@
-.App {
-  text-align: center;
-  margin-top: 50px;
+/* Estilo general */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
 }
 
-.task-input {
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+/* Título centrado */
+.title {
+  text-align: center;
+  font-size: 36px;
   margin-bottom: 20px;
 }
 
-input {
-  padding: 10px;
-  margin-right: 10px;
-  width: 300px;
-}
-
-button {
-  padding: 10px 20px;
-  cursor: pointer;
-}
-
+/* Lista de tareas */
 .task-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  width: 80%;
+  max-width: 800px;
+  margin-top: 20px;
 }
 
 .task-card {
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
   padding: 20px;
-  margin: 10px;
-  width: 250px;
-  text-align: left;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-direction: column;
+}
+
+.task-card h3 {
+  margin: 0;
+  font-size: 20px;
 }
 
 .task-card p {
+  margin: 5px 0 0 0;
   font-size: 16px;
-  margin-bottom: 20px;
 }
 
-.remove-btn {
-  background-color: #ff6b6b;
-  border: none;
+/* Botón eliminar */
+.delete-btn {
+  background-color: #dc3545;
   color: white;
+  border: none;
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
-  align-self: flex-end;
 }
 
-.remove-btn:hover {
-  background-color: #ff4c4c;
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* Botón flotante circular con el signo "+" */
+.add-task-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 36px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.add-task-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* Inputs del formulario */
+input,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+textarea {
+  height: 100px;
+}
+
+/* Botones del modal */
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.create-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.create-btn:hover {
+  background-color: #0056b3;
+}
+
+.close-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background-color: #c82333;
 }
