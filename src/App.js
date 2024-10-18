@@ -5,7 +5,8 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskDescription, setNewTaskDescription] = useState('');
-  const [tasks, setTasks] = useState([]); // Estado para almacenar las tareas
+  const [newTaskFile, setNewTaskFile] = useState(null); // Nuevo estado para el archivo
+  const [tasks, setTasks] = useState([]);
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -15,6 +16,7 @@ function App() {
     setIsModalOpen(false);
     setNewTaskTitle('');
     setNewTaskDescription('');
+    setNewTaskFile(null); // Reiniciar el archivo
   };
 
   const createTask = () => {
@@ -22,8 +24,9 @@ function App() {
       const newTask = {
         title: newTaskTitle,
         description: newTaskDescription,
+        file: newTaskFile,
       };
-      setTasks([...tasks, newTask]); // Agrega la nueva tarea a la lista
+      setTasks([...tasks, newTask]);
       closeModal();
     } else {
       alert("Por favor, completa el título y la descripción.");
@@ -32,19 +35,35 @@ function App() {
 
   const deleteTask = (index) => {
     const updatedTasks = tasks.filter((task, taskIndex) => taskIndex !== index);
-    setTasks(updatedTasks); // Elimina la tarea seleccionada
+    setTasks(updatedTasks);
   };
 
   return (
     <div className="App">
       <h1 className="title">Lista de Tareas</h1>
 
-      {/* Mostrar tarjetas de tareas */}
       <div className="task-list">
         {tasks.map((task, index) => (
           <div className="task-card" key={index}>
             <h3>{task.title}</h3>
             <p>{task.description}</p>
+            {task.file && (
+              <div className="file-preview">
+                {task.file.type.startsWith('image/') ? (
+                  <a href={URL.createObjectURL(task.file)} target="_blank" rel="noopener noreferrer">
+                    <img src={URL.createObjectURL(task.file)} alt="miniatura" className="thumbnail" />
+                  </a>
+                ) : (
+                  <a 
+                    href={URL.createObjectURL(task.file)} 
+                    download={task.file.name} // Asegura que el archivo se descargue
+                    rel="noopener noreferrer"
+                  >
+                    {task.file.name}
+                  </a>
+                )}
+              </div>
+            )}
             <button onClick={() => deleteTask(index)} className="delete-btn">
               Eliminar
             </button>
@@ -52,12 +71,11 @@ function App() {
         ))}
       </div>
 
-      {/* Botón flotante */}
+
       <button className="add-task-btn" onClick={openModal}>
         +
       </button>
 
-      {/* Modal */}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -72,6 +90,10 @@ function App() {
               placeholder="Descripción"
               value={newTaskDescription}
               onChange={(e) => setNewTaskDescription(e.target.value)}
+            />
+            <input
+              type="file"
+              onChange={(e) => setNewTaskFile(e.target.files[0])} // Maneja el archivo
             />
             <div className="modal-buttons">
               <button onClick={createTask} className="create-btn">Crear</button>
