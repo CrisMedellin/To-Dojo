@@ -10,7 +10,7 @@ body {
   align-items: center;
   justify-content: flex-start;
   height: 100vh;
-  background-image: url('./images/Dojo0.webp'); /* Ruta a la imagen */
+  background-image: url('./images/Dojo0.png'); /* Ruta a la imagen */
   background-size: cover; /* Escala la imagen para cubrir toda la pantalla */
   background-position: center; /* Centra la imagen */
   background-repeat: no-repeat; /* Evita que la imagen se repita */
@@ -134,23 +134,29 @@ body {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #ad2b03;
-  color: white;
+  background-color: transparent;
   border: none;
   border-radius: 50%;
   width: 60px;
   height: 60px;
-  font-size: 36px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 0;
 }
 
 .add-task-btn:hover {
-  background-color: #511402;
+  background-color: rgba(0, 0, 0, 0.1);
 }
+
+.add-task-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 
 /* Modal */
 .modal-overlay {
@@ -235,3 +241,28 @@ textarea {
 }
 
 
+.color-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid ;
+  cursor: pointer;
+  outline: none;
+}
+
+.color-btn.selected {
+  border-color: #00aaff; /* Borde cuando está seleccionado */
+}
+
+.color-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.color-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

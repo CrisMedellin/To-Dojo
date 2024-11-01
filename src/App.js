@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
+import KatanasImage from './images/Katanas.png';
 import './App.css';
 
 function App() {
@@ -14,6 +15,22 @@ function App() {
   const [editTaskTitle, setEditTaskTitle] = useState('');
   const [editTaskDescription, setEditTaskDescription] = useState('');
   const [editTaskFile, setEditTaskFile] = useState(null);
+  const [newTaskColor, setNewTaskColor] = useState('#ffffff'); // Default color
+  const [editTaskColor, setEditTaskColor] = useState('#ffffff');
+
+  const pastelColors = [
+    { name: 'Blanco', value: '#ffffff' },
+    { name: 'Rojo cereza', value: '#ffc1c1' },
+    { name: 'Azul real', value: '#c1d4ff' },
+    { name: 'Verde esmeralda', value: '#c1ffc1' },
+    { name: 'Naranja terracota', value: '#ffd7c1' },
+    { name: 'Púrpura berenjena', value: '#d4c1ff' },
+    { name: 'Turquesa', value: '#c1ffff' },
+    { name: 'Amarillo mostaza', value: '#fff5c1' },
+    { name: 'Coral', value: '#ffd1c1' },
+    { name: 'Negro carbón', value: '#c4c4c4' },
+    { name: 'Gris acero', value: '#e0e0e0' }
+  ];
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -24,6 +41,7 @@ function App() {
     setNewTaskTitle('');
     setNewTaskDescription('');
     setNewTaskFile(null); // Reiniciar el archivo
+    setNewTaskColor('#ffffff'); // Reset color
   };
 
   const openEditModal = (index) => {
@@ -32,6 +50,7 @@ function App() {
     setEditTaskTitle(taskToEdit.title);
     setEditTaskDescription(taskToEdit.description);
     setEditTaskFile(taskToEdit.file);
+    setEditTaskColor(taskToEdit.color || '#ffffff');
     setIsEditModalOpen(true);
   };
   
@@ -41,6 +60,7 @@ function App() {
     setEditTaskTitle('');
     setEditTaskDescription('');
     setEditTaskFile(null);
+    setEditTaskColor('#ffffff'); // Reset color
   };
   
   const saveTaskEdits = () => {
@@ -50,6 +70,7 @@ function App() {
         title: editTaskTitle,
         description: editTaskDescription,
         file: editTaskFile,
+        color: editTaskColor || '#ffffff'
       };
       setTasks(updatedTasks);
       closeEditModal();
@@ -64,6 +85,7 @@ function App() {
         title: newTaskTitle,
         description: newTaskDescription,
         file: newTaskFile,
+        color: newTaskColor || '#ffffff'
       };
       setTasks([...tasks, newTask]);
       closeModal();
@@ -83,7 +105,7 @@ function App() {
   
       <div className="task-list">
         {tasks.map((task, index) => (
-          <div className="task-card" key={index}>
+          <div className="task-card" key={index} style={{ backgroundColor: task.color || '#ffffff' }}>
             <h3>{task.title}</h3>
             <p>{task.description}</p>
             {task.file && (
@@ -114,7 +136,7 @@ function App() {
       </div>
   
       <button className="add-task-btn" onClick={openModal}>
-        +
+      <img src={KatanasImage} alt="Agregar tarea" className="add-task-icon" />
       </button>
   
       {/* Modal de creación */}
@@ -137,6 +159,14 @@ function App() {
               type="file"
               onChange={(e) => setNewTaskFile(e.target.files[0])}
             />
+            <div className="color-picker">
+              <label>Selecciona un color:</label>
+              <div className="color-options">
+                {pastelColors.map((color) => (
+                  <button key={color.name} style={{ backgroundColor: color.value }} className={`color-btn ${newTaskColor === color.value ? 'selected' : ''}`} onClick={() => setNewTaskColor(color.value)} />
+                ))}
+              </div>
+            </div>
             <div className="modal-buttons">
               <button onClick={createTask} className="create-btn">Crear</button>
               <button onClick={closeModal} className="close-btn">Cerrar</button>
@@ -173,6 +203,14 @@ function App() {
                 </button>
               </div>
             )}
+            <div className="color-picker">
+              <label>Selecciona un color:</label>
+              <div className="color-options">
+                {pastelColors.map((color) => (
+                  <button key={color.name} style={{ backgroundColor: color.value }} className={`color-btn ${editTaskColor === color.value ? 'selected' : ''}`} onClick={() => setEditTaskColor(color.value)} />
+                ))}
+              </div>
+            </div>
             <div className="modal-buttons">
               <button onClick={saveTaskEdits} className="save-btn">Guardar</button>
               <button onClick={closeEditModal} className="close-btn">Cancelar</button>
