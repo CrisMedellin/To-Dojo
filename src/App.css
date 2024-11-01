@@ -10,11 +10,16 @@ body {
   align-items: center;
   justify-content: flex-start;
   height: 100vh;
-  background-color: #f4f4f4;
+  background-image: url('./images/Dojo0.webp'); /* Ruta a la imagen */
+  background-size: cover; /* Escala la imagen para cubrir toda la pantalla */
+  background-position: center; /* Centra la imagen */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  background-attachment: fixed; /* Hace que la imagen de fondo se mantenga fija al hacer scroll */
 }
 
 /* Título centrado y fijo */
 .title {
+  color: #7b130c;
   text-align: center;
   font-size: 36px;
   margin-bottom: 20px;
@@ -22,7 +27,6 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  background-color: #f4f4f4;
   z-index: 10;
   padding: 10px 0;
 }
@@ -42,12 +46,12 @@ body {
 }
 
 .task-list::-webkit-scrollbar-thumb {
-  background-color: #007bff; /* Color del "pulgar" de la barra */
+  background-color: #ff6f00; /* Color del "pulgar" de la barra */
   border-radius: 10px; /* Bordes redondeados */
 }
 
 .task-list::-webkit-scrollbar-thumb:hover {
-  background-color: #0056b3; /* Color del "pulgar" al pasar el ratón */
+  background-color: #b33f00; /* Color del "pulgar" al pasar el ratón */
 }
 
 .task-list::-webkit-scrollbar-track {
@@ -62,37 +66,67 @@ body {
   margin-bottom: 15px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* Alinea el contenido al principio */
+  align-items: center;
+  max-width: 100%;
+  overflow-y: auto; /* Solo permite el scroll vertical */
+  overflow-x: hidden; /* Evita el scroll horizontal */
+  overflow-wrap: break-word; /* Permite saltos de línea en palabras largas */
 }
 
 .task-card h3 {
   margin: 0;
   font-size: 20px;
-  flex: 1; /* Permite que el título ocupe el espacio disponible */
+  text-align: left;
+  flex: 0 0 15%; /* Define un ancho fijo para el título */
+  overflow-wrap: break-word; /* Permite saltos de línea en palabras largas */
 }
 
 .task-card p {
-  margin: 10px 0; /* Añade espacio entre el título y la descripción */
+  margin: 5px 0;
   font-size: 16px;
-  flex: 1; /* Permite que la descripción ocupe el espacio disponible */
-  overflow-wrap: break-word; /* Permite saltos de línea */
+  flex: 1;
+  overflow-y: auto; /* Solo permite el scroll vertical */
+  overflow-x: hidden; /* Evita el scroll horizontal */
+  overflow-wrap: break-word; /* Permite saltos de línea en palabras largas */
   max-width: 70%; /* Controla el ancho de la descripción */
 }
 
-/* Botón eliminar */
-.delete-btn {
-  background-color: #dc3545;
-  color: white;
+/* Botón edición */
+.edit-btn {
+  background-color: transparent; /* Color amarillo */
+  color: rgb(13, 104, 143);
+  font-size: 20px;
   border: none;
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
-  margin-left: 10px; /* Espacio entre la descripción y el botón */
-  align-self: center; /* Alinea el botón verticalmente al centro */
+  margin-right: 10px;
+  margin-left: 20px; /* Espacio entre la descripción y el botón */
+}
+
+.edit-btn:hover {
+  color: #1f44e6;
+}
+
+/* Botón eliminar */
+.delete-btn {
+  background-color: transparent;
+  color: #dc3545;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px; /* Espacio entre la descripción y el botón 
+  align-self: center;  Alinea el botón verticalmente al centro */ 
 }
 
 .delete-btn:hover {
-  background-color: #c82333;
+  color: #a00303;
 }
 
 /* Botón flotante circular con el signo "+" */
@@ -100,7 +134,7 @@ body {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #007bff;
+  background-color: #ad2b03;
   color: white;
   border: none;
   border-radius: 50%;
@@ -115,7 +149,7 @@ body {
 }
 
 .add-task-btn:hover {
-  background-color: #0056b3;
+  background-color: #511402;
 }
 
 /* Modal */
@@ -158,6 +192,7 @@ textarea {
 /* Archivos e imagenes */
 .file-preview {
   margin-top: 10px; /* Espacio entre la descripción y el archivo */
+  margin-left: 10px;
 }
 
 .thumbnail {
