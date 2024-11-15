@@ -37,16 +37,7 @@ function App() {
 
   // Obtener todas las tareas al cargar la aplicación
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const response = await fetch(`${API_URL}/tasks?userId=${userId}`);
-        const data = await response.json();
-        setTasks(data);
-      } catch (error) {
-        console.error("Error al obtener las tareas:", error);
-      }
-    };
-    fetchTasks();
+    getTasks();
   }, []);
 
   const openModal = () => setIsModalOpen(true);
@@ -75,6 +66,17 @@ function App() {
     setEditTaskDescription('');
     setEditTaskFile(null);
     setEditTaskColor('#ffffff');
+  };
+
+  // Obtener tareas del usuario (GET)
+  const getTasks = async () => {
+    try {
+      const response = await fetch(`${API_URL}/tasks?userId=${userId}`);
+      const data = await response.json();
+      setTasks(data);
+    } catch (error) {
+      console.error("Error al obtener las tareas:", error);
+    }
   };
 
   // Crear tarea nueva
@@ -114,9 +116,8 @@ function App() {
             throw new Error(`Error en la creación de tarea: ${response.statusText}`);
         }
 
-        const newTask = await response.json();
-        setTasks((prevTasks) => [...prevTasks, { ...taskData, fileUrl: newTask.fileUrl }]);
         closeModal();
+        getTasks();
     } catch (error) {
         console.error("Error al crear la tarea:", error);
     }
@@ -183,7 +184,7 @@ function App() {
             fileName: editTaskFile ? editTaskFile.name : taskToUpdate.fileName // Actualiza el nombre del archivo si fue cambiado
         };
        
-        setTasks(updatedTasks);
+        getTasks();
         closeEditModal();
     } catch (error) {
         console.error("Error al actualizar la tarea:", error);
