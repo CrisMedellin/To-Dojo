@@ -179,7 +179,8 @@ function App() {
             title: editTaskTitle,
             description: editTaskDescription,
             color: editTaskColor,
-            fileUrl: data.fileUrl // Actualiza la URL del archivo si fue cambiada
+            fileUrl: data.fileUrl, // Actualiza la URL del archivo si fue cambiada
+            fileName: editTaskFile ? editTaskFile.name : taskToUpdate.fileName // Actualiza el nombre del archivo si fue cambiado
         };
        
         setTasks(updatedTasks);
