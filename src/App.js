@@ -33,7 +33,7 @@ function App() {
     { name: 'Gris acero', value: '#e0e0e0' }
   ];
 
-  const API_URL = "https://esppb5i6ui.execute-api.us-east-1.amazonaws.com/dev"; // Reemplaza <tu-api-id> con tu ID de API Gateway
+  const API_URL = "https://<tu-api-id>.execute-api.us-east-1.amazonaws.com/dev"; // Reemplaza <tu-api-id> con tu ID de API Gateway
 
   // Obtener todas las tareas al cargar la aplicación
   useEffect(() => {
