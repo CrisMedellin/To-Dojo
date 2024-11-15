@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen } from '@fortawesome/free-solid-svg-icons';
 import KatanasImage from './images/Katanas.png';
@@ -17,7 +17,6 @@ function App() {
   const [editTaskFile, setEditTaskFile] = useState(null);
   const [newTaskColor, setNewTaskColor] = useState('#ffffff'); // Default color
   const [editTaskColor, setEditTaskColor] = useState('#ffffff');
-  const userId = "RPC"; // Usuario predeterminado
 
   const pastelColors = [
     { name: 'Blanco', value: '#ffffff' },
@@ -54,8 +53,8 @@ function App() {
     setIsModalOpen(false);
     setNewTaskTitle('');
     setNewTaskDescription('');
-    setNewTaskFile(null);
-    setNewTaskColor('#ffffff');
+    setNewTaskFile(null); // Reiniciar el archivo
+    setNewTaskColor('#ffffff'); // Reset color
   };
 
   const openEditModal = (index) => {
@@ -63,154 +62,81 @@ function App() {
     setEditTaskIndex(index);
     setEditTaskTitle(taskToEdit.title);
     setEditTaskDescription(taskToEdit.description);
-    setEditTaskFile(null);
+    setEditTaskFile(taskToEdit.file);
     setEditTaskColor(taskToEdit.color || '#ffffff');
     setIsEditModalOpen(true);
   };
-
+  
   const closeEditModal = () => {
     setIsEditModalOpen(false);
     setEditTaskIndex(null);
     setEditTaskTitle('');
     setEditTaskDescription('');
     setEditTaskFile(null);
-    setEditTaskColor('#ffffff');
+    setEditTaskColor('#ffffff'); // Reset color
   };
-
-  // Crear tarea nueva
-  const createTask = async () => {
-    if (!newTaskTitle || !newTaskDescription) {
-        alert("Por favor, completa el título y la descripción.");
-        return;
-    }
-
-    const taskId = `task-${Date.now()}`;
-
-    // Convertir el archivo en base64 si existe
-    let fileBase64 = null;
-    if (newTaskFile) {
-        fileBase64 = await convertFileToBase64(newTaskFile);
-    }
-
-    // Crear el objeto de datos de la tarea
-    const taskData = {
-        userId: "user123",
-        taskId,
-        title: newTaskTitle,
-        description: newTaskDescription,
-        color: newTaskColor,
-        fileName: newTaskFile ? newTaskFile.name : null,
-        fileContent: fileBase64 // Archivo en base64
-    };
-
-    try {
-        const response = await fetch(`${API_URL}/tasks`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(taskData)
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error en la creación de tarea: ${response.statusText}`);
-        }
-
-        const newTask = await response.json();
-        setTasks((prevTasks) => [...prevTasks, { ...taskData, fileUrl: newTask.fileUrl }]);
-        closeModal();
-    } catch (error) {
-        console.error("Error al crear la tarea:", error);
-    }
-  };
-
-
-  // Eliminar tarea
-  const deleteTask = async (index) => {
-    const taskToDelete = tasks[index];
-    try {
-      await fetch(`${API_URL}/tasks`, {
-        method: "DELETE",
-        body: JSON.stringify({ userId, taskId: taskToDelete.taskId }),
-        headers: { "Content-Type": "application/json" },
-      });
-      setTasks(tasks.filter((_, i) => i !== index));
-    } catch (error) {
-      console.error("Error al eliminar la tarea:", error);
-    }
-  };
-
-  const saveTaskEdits = async () => {
-    const taskToUpdate = tasks[editTaskIndex];
-   
-    // Convertir el archivo en base64 si existe
-    let fileBase64 = null;
-    if (editTaskFile) {
-        fileBase64 = await convertFileToBase64(editTaskFile);
-    }
-
-    // Crear el objeto de datos de la tarea
-    const updatedTask = {
-        userId,
-        taskId: taskToUpdate.taskId,
+  
+  const saveTaskEdits = () => {
+    if (editTaskTitle && editTaskDescription) {
+      const updatedTasks = [...tasks];
+      updatedTasks[editTaskIndex] = {
         title: editTaskTitle,
         description: editTaskDescription,
-        color: editTaskColor,
-        fileName: editTaskFile ? editTaskFile.name : null,
-        fileContent: fileBase64 // Archivo en base64 si existe
-    };
+        file: editTaskFile,
+        color: editTaskColor || '#ffffff'
+      };
+      setTasks(updatedTasks);
+      closeEditModal();
+    } else {
+      alert("Por favor, completa el título y la descripción.");
+    }
+  };  
 
-    try {
-        // Enviar la solicitud PUT con los datos en formato JSON
-        const response = await fetch(`${API_URL}/tasks`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(updatedTask), // Enviar como JSON
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error en la actualización de tarea: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-       
-        // Actualizar el estado local de tareas
-        const updatedTasks = [...tasks];
-        updatedTasks[editTaskIndex] = {
-            ...taskToUpdate,
-            title: editTaskTitle,
-            description: editTaskDescription,
-            color: editTaskColor,
-            fileUrl: data.fileUrl // Actualiza la URL del archivo si fue cambiada
-        };
-       
-        setTasks(updatedTasks);
-        closeEditModal();
-    } catch (error) {
-        console.error("Error al actualizar la tarea:", error);
+  const createTask = () => {
+    if (newTaskTitle && newTaskDescription) {
+      const newTask = {
+        title: newTaskTitle,
+        description: newTaskDescription,
+        file: newTaskFile,
+        color: newTaskColor || '#ffffff'
+      };
+      setTasks([...tasks, newTask]);
+      closeModal();
+    } else {
+      alert("Por favor, completa el título y la descripción.");
     }
   };
 
-
-  const convertFileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result.split(",")[1]);
-      reader.onerror = (error) => reject(error);
-    });
+  const deleteTask = (index) => {
+    const updatedTasks = tasks.filter((task, taskIndex) => taskIndex !== index);
+    setTasks(updatedTasks);
   };
 
   return (
     <div className="App">
       <h1 className="title">To-Dojo</h1>
+  
       <div className="task-list">
         {tasks.map((task, index) => (
-          <div className="task-card" key={task.taskId} style={{ backgroundColor: task.color || '#ffffff' }}>
+          <div className="task-card" key={index} style={{ backgroundColor: task.color || '#ffffff' }}>
             <h3>{task.title}</h3>
             <p>{task.description}</p>
-            {task.fileUrl && (
-              <a href={task.fileUrl} target="_blank" rel="noopener noreferrer">
-                Ver archivo adjunto
-              </a>
+            {task.file && (
+              <div className="file-preview">
+                {task.file.type.startsWith('image/') ? (
+                  <a href={URL.createObjectURL(task.file)} target="_blank" rel="noopener noreferrer">
+                    <img src={URL.createObjectURL(task.file)} alt="miniatura" className="thumbnail" />
+                  </a>
+                ) : (
+                  <a
+                    href={URL.createObjectURL(task.file)}
+                    download={task.file.name}
+                    rel="noopener noreferrer"
+                  >
+                    {task.file.name}
+                  </a>
+                )}
+              </div>
             )}
             <button onClick={() => openEditModal(index)} className="edit-btn">
               <FontAwesomeIcon icon={faPen} />
@@ -221,16 +147,31 @@ function App() {
           </div>
         ))}
       </div>
+  
       <button className="add-task-btn" onClick={openModal}>
-        <img src={KatanasImage} alt="Agregar tarea" className="add-task-icon" />
+      <img src={KatanasImage} alt="Agregar tarea" className="add-task-icon" />
       </button>
+  
+      {/* Modal de creación */}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h2>Nueva Tarea</h2>
-            <input type="text" placeholder="Título" value={newTaskTitle} onChange={(e) => setNewTaskTitle(e.target.value)} />
-            <textarea placeholder="Descripción" value={newTaskDescription} onChange={(e) => setNewTaskDescription(e.target.value)} />
-            <input type="file" onChange={(e) => setNewTaskFile(e.target.files[0])} />
+            <input
+              type="text"
+              placeholder="Título"
+              value={newTaskTitle}
+              onChange={(e) => setNewTaskTitle(e.target.value)}
+            />
+            <textarea
+              placeholder="Descripción"
+              value={newTaskDescription}
+              onChange={(e) => setNewTaskDescription(e.target.value)}
+            />
+            <input
+              type="file"
+              onChange={(e) => setNewTaskFile(e.target.files[0])}
+            />
             <div className="color-picker">
               <label>Selecciona un color:</label>
               <div className="color-options">
@@ -246,13 +187,35 @@ function App() {
           </div>
         </div>
       )}
+  
+      {/* Modal de edición */}
       {isEditModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h2>Editar Tarea</h2>
-            <input type="text" placeholder="Título" value={editTaskTitle} onChange={(e) => setEditTaskTitle(e.target.value)} />
-            <textarea placeholder="Descripción" value={editTaskDescription} onChange={(e) => setEditTaskDescription(e.target.value)} />
-            <input type="file" onChange={(e) => setEditTaskFile(e.target.files[0])} />
+            <input
+              type="text"
+              placeholder="Título"
+              value={editTaskTitle}
+              onChange={(e) => setEditTaskTitle(e.target.value)}
+            />
+            <textarea
+              placeholder="Descripción"
+              value={editTaskDescription}
+              onChange={(e) => setEditTaskDescription(e.target.value)}
+            />
+            <input
+              type="file"
+              onChange={(e) => setEditTaskFile(e.target.files[0])}
+            />
+            {editTaskFile && (
+              <div className="file-info">
+                <p>Archivo actual: {editTaskFile.name}</p>
+                <button onClick={() => setEditTaskFile(null)} className="remove-file-btn">
+                  Eliminar archivo
+                </button>
+              </div>
+            )}
             <div className="color-picker">
               <label>Selecciona un color:</label>
               <div className="color-options">
@@ -269,7 +232,7 @@ function App() {
         </div>
       )}
     </div>
-  );
+  );  
 }
 
 export default App;
